@@ -1,0 +1,7 @@
+{
+  "_latest": "0.3.8",
+  "apiEndpoint": "https://chapter-iii-desafio-01.prismic.io/api/v2",
+  "libraries": [
+    "@/slices"
+  ]
+}
