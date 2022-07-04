@@ -1,7 +1,24 @@
+:root {
+  --pink-500: #FF57B2;
+  --gray-900: #282C34;
+  --gray-500: #BBBBBB;
+  --gray-300: #D7D7D7;
+  --gray-010: #F8F8F8;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-// TODO
+body {
+  background-color: var(--gray-900);   
+}
+
+p,
+a, 
+span,
+button {
+  font-family: 'Inter', sans-serif;
+}
