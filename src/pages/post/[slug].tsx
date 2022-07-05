@@ -1,4 +1,7 @@
+import { format } from 'date-fns';
 import { GetStaticPaths, GetStaticProps } from 'next';
+import { RichText } from 'prismic-dom';
+import { FiCalendar, FiUser } from 'react-icons/fi';
 
 import { getPrismicClient } from '../../services/prismic';
 
@@ -13,7 +16,7 @@ interface Post {
       url: string;
     };
     author: string;
-    content: {
+    group: {
       heading: string;
       body: {
         text: string;
@@ -26,20 +29,67 @@ interface PostProps {
   post: Post;
 }
 
-// export default function Post() {
-//   // TODO
-// }
+export default function Post({ post } : PostProps) {
 
-// export const getStaticPaths = async () => {
-//   const prismic = getPrismicClient({});
-//   const posts = await prismic.getByType(TODO);
+  return(
+    <main>
+      <div className={styles.banner}>
+        <img src={post.data.banner.url} width="100%" height="400px" alt="" />
+      </div>
+      <section className={commonStyles.container} >
+        <div>
+          <p className={commonStyles.title}>{RichText.asText(post.data.titlePost)}</p>
+          <p className={commonStyles.subTitle} >{RichText.asText(post.data.subTitle)}</p>
+          <div className={commonStyles.dateAndAuthor}>
+            <span>
+              <FiCalendar color='#BBBBBB' />
+              <time>
+                {format(new Date(post.first_publication_date), `d MMM yyyy`)}
+              </time>
+            </span>
+            <span>
+              <FiUser color='#BBBBBB' />
+              <p>{RichText.asText(post.data.nameAuthor)}</p>  
+            </span>
+          </div>
+        </div>
 
-//   // TODO
-// };
+        <div className={styles.content}>
+          {
+            post.data.group?.map( ({ heading, body }, idx) => (
+              <div key={idx}>
+                <h1>{RichText.asText(heading)}</h1>
 
-// export const getStaticProps = async ({params }) => {
-//   const prismic = getPrismicClient({});
-//   const response = await prismic.getByUID(TODO);
+                <div dangerouslySetInnerHTML={{ __html: RichText.asHtml(body) }} />
 
-//   // TODO
-// };
+              </div>
+            ))
+          }
+        </div>
+      </section>
+    </main>
+  )
+}
+
+export const getStaticPaths = async () => {
+  // const prismic = getPrismicClient({});
+  // const posts = await prismic.getByType(TODO);
+
+  // // TODO
+
+  return {
+    paths: [], //-> Serve para indicar quais páginas serão geradas de forma estática durante o build
+    fallback: 'blocking'
+  }
+};
+
+export const getStaticProps = async ({ params: { slug } }) => {
+  const prismic = getPrismicClient({});
+  const response = await prismic.getByUID("post", String(slug), {});
+  
+  return {
+    props: {
+      post: response
+    }
+  }
+};

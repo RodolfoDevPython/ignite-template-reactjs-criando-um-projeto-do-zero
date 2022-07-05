@@ -2,6 +2,8 @@ import { format } from 'date-fns';
 import { GetStaticProps } from 'next';
 import { RichText } from 'prismic-dom';
 
+import Link from "next/link"
+
 import { FiCalendar, FiUser } from "react-icons/fi";
 
 import { getPrismicClient } from '../services/prismic';
@@ -33,29 +35,28 @@ export default function Home(props: HomeProps) {
 
   const { results, next_page } = props.postsPagination;
 
-  console.log({
-    results, 
-    next_page
-  })
-
   return (
-    <div className={styles.container}>
+    <div className={commonStyles.container}>
       { results.map( post => (
-        <div className={styles.post}>
-          <p className={styles.title}>{RichText.asText(post.data.titlePost)}</p>
-          <p className={styles.subTitle} >{RichText.asText(post.data.subTitle)}</p>
-          <div className={styles.dateAndAuthor}>
-            <span>
-              <FiCalendar color='#BBBBBB' />
-              <time>
-                {format(new Date(post.first_publication_date), `d MMM yyyy`)}
-              </time>
-            </span>
-            <span>
-              <FiUser color='#BBBBBB' />
-              <p>{RichText.asText(post.data.nameAuthor)}</p>  
-            </span>
-          </div>
+        <div className={styles.post} key={post.uid} >
+          <Link href={`/post/${post.uid}`} >
+            <div>
+              <p className={commonStyles.title}>{RichText.asText(post.data.titlePost)}</p>
+              <p className={commonStyles.subTitle} >{RichText.asText(post.data.subTitle)}</p>
+              <div className={commonStyles.dateAndAuthor}>
+                <span>
+                  <FiCalendar color='#BBBBBB' />
+                  <time>
+                    {format(new Date(post.first_publication_date), `d MMM yyyy`)}
+                  </time>
+                </span>
+                <span>
+                  <FiUser color='#BBBBBB' />
+                  <p>{RichText.asText(post.data.nameAuthor)}</p>  
+                </span>
+              </div>
+            </div>
+          </Link>
         </div>
       )) }
     </div>

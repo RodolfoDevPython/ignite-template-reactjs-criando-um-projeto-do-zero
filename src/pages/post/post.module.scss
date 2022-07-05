@@ -1,1 +1,41 @@
-// TODO
+.banner {
+    margin-bottom: 80px;
+
+    img {
+        object-fit: cover;
+    }
+}
+
+.content {
+    margin-top: 64px;
+
+    h1 {
+        font-weight: 700;
+        font-size: 36px;
+        line-height: 140%;
+        color: var(--gray-010);
+        margin-bottom: 2rem;
+    }
+
+    p, li {
+        font-weight: 400;
+        font-size: 18px;
+        line-height: 140%;
+        color: var(--gray-300);
+        margin-bottom: 1.5rem;
+    }
+
+    ul {
+        list-style: none;
+    }
+
+    a {
+        color: var(--gray-010);
+
+        &:hover {
+            color: var(--pink-500);
+            font-weight: 500;
+        }
+    }
+
+}
