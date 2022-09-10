@@ -9,6 +9,8 @@ export interface PrismicConfig {
 export function getPrismicClient(config: PrismicConfig): prismic.Client {
   const client = prismic.createClient(process.env.PRISMIC_API_ENDPOINT);
 
+  console.log({ client, env: process.env.PRISMIC_API_ENDPOINT })
+
   enableAutoPreviews({
     client,
     req: config.req,

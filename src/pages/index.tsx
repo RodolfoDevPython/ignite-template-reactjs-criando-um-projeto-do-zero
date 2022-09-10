@@ -35,6 +35,10 @@ export default function Home(props: HomeProps) {
 
   const { results, next_page } = props.postsPagination;
 
+  console.log({ 
+    results
+  })
+
   return (
     <div className={commonStyles.container}>
       { results.map( post => (
@@ -66,6 +70,8 @@ export default function Home(props: HomeProps) {
 export const getStaticProps = async () => {
   const prismic = getPrismicClient({});
   const postsResponse = await prismic.getByType('post');
+
+  console.log({ postsResponse })
 
   return {
     props: {

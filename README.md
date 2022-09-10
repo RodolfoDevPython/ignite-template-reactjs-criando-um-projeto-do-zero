@@ -13,7 +13,7 @@ Essa será uma aplicação onde o seu principal objetivo é criar um blog do 
 - Uso de ícones com `react-icons`;
 - Requisições HTTP com `fetch`;
 - Entre outros.
-
+- Utilizamos o [slicemachine](https://prismic.io/docs/technologies/setup-nextjs) para configurar o CMS do prismic [doc completa](https://prismic.io/docs/technologies/setup-nextjs)
 
 ## Figma 
 - [Link para acesso ao figma do projeto](https://www.figma.com/file/0Y26j0tf1K2WB5c1ja5hov/Desafios-M%C3%B3dulo-3-ReactJS/duplicate)
