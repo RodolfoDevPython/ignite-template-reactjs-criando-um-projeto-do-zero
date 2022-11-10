@@ -12,8 +12,8 @@ import commonStyles from '../styles/common.module.scss';
 import styles from './home.module.scss';
 
 interface Post {
-  uid?: string;
-  first_publication_date: string | null;
+  uid: string;
+  first_publication_date: string;
   data: {
     titlePost: string;
     subTitle: string;
@@ -28,54 +28,76 @@ interface PostPagination {
 
 interface HomeProps {
   postsPagination: PostPagination;
+
 }
 
-export default function Home(props: HomeProps) {
+export default function Home({ postsPagination }: HomeProps) {
   // TODO
 
-  const { results, next_page } = props.postsPagination;
+  if (!postsPagination) return
 
-  console.log({ 
-    results
-  })
-
+  const { results, next_page } = postsPagination;
+  
   return (
     <div className={commonStyles.container}>
-      { results.map( post => (
-        <div className={styles.post} key={post.uid} >
-          <Link href={`/post/${post.uid}`} >
+      { results?.map( post => (
+        <div className={styles.post} key={post?.uid} >
+          <Link href={`/post/${post?.uid}`} prefetch={false} >
             <div>
-              <p className={commonStyles.title}>{RichText.asText(post.data.titlePost)}</p>
-              <p className={commonStyles.subTitle} >{RichText.asText(post.data.subTitle)}</p>
+              <p className={commonStyles.title}>{post?.data?.titlePost}</p>
+              <p className={commonStyles.subTitle} >{post?.data?.subTitle}</p>
               <div className={commonStyles.dateAndAuthor}>
                 <span>
                   <FiCalendar color='#BBBBBB' />
                   <time>
-                    {format(new Date(post.first_publication_date), `d MMM yyyy`)}
+                    {format(new Date(post?.first_publication_date), `d MMM yyyy`)}
                   </time>
                 </span>
                 <span>
                   <FiUser color='#BBBBBB' />
-                  <p>{RichText.asText(post.data.nameAuthor)}</p>  
+                  <p>{post?.data?.nameAuthor}</p>  
                 </span>
               </div>
             </div>
           </Link>
         </div>
       )) }
+
+      {next_page && <button className={styles.buttonLoadMore}>carregar mais</button>}
     </div>
   )
 }
 
-export const getStaticProps = async () => {
+export const getStaticProps: GetStaticProps = async () => {
   const prismic = getPrismicClient({});
   const postsResponse = await prismic.getByType('post');
 
-  console.log({ postsResponse })
+
+  const posts = postsResponse.results?.map(post => {
+    const { 
+      titlePost,
+      subTitle, 
+      nameAuthor
+    } = post?.data;
+    return {
+      uid: post.uid,
+      first_publication_date: post?.first_publication_date,
+      data: {
+        subTitle: typeof subTitle == 'object' ? RichText?.asText(subTitle) : subTitle,  
+        titlePost: typeof titlePost == 'object' ? RichText?.asText(titlePost) : titlePost,
+        nameAuthor: typeof nameAuthor == 'object' ? RichText?.asText(nameAuthor) : nameAuthor
+      } 
+    };
+  });
 
   return {
     props: {
-      postsPagination: postsResponse
+      postsPagination: {
+        ...postsResponse,
+        next_page: postsResponse.next_page,
+        results: posts
+      },
+      revalidate: 60, // 24 hours
     }
   }
 

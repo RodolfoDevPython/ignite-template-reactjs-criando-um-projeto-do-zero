@@ -11,11 +11,12 @@ import styles from './post.module.scss';
 interface Post {
   first_publication_date: string | null;
   data: {
-    title: string;
+    titlePost: string;
+    subTitle: string;
     banner: {
       url: string;
     };
-    author: string;
+    nameAuthor: string;
     group: {
       heading: string;
       body: {
@@ -26,11 +27,13 @@ interface Post {
 }
 
 interface PostProps {
-  post: Post;
+  post: Post | any;
 }
 
 export default function Post({ post } : PostProps) {
 
+  if (!post) return 
+  
   return(
     <main>
       <div className={styles.banner}>
@@ -56,7 +59,7 @@ export default function Post({ post } : PostProps) {
 
         <div className={styles.content}>
           {
-            post.data.group?.map( ({ heading, body }, idx) => (
+            post && post?.data?.group?.map( ({ heading, body }, idx) => (
               <div key={idx}>
                 <h1>{RichText.asText(heading)}</h1>
 
